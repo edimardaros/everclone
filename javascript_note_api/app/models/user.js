@@ -24,6 +24,16 @@ userSchema.pre('save', function(next) { // next go to the next middleware
       }  
     )
   }
-})
+});
+
+// Check if password is correct
+userSchema.methods.isCorrectPassword = function (password, callback) {
+  bcrypt.compare(password, this.password, function(err, same) {
+    if(err)
+      callback(err);
+    else
+      callback(err, same);
+  })
+}
 
 module.exports = mongoose.model('User', userSchema);
