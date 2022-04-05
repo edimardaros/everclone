@@ -1,12 +1,13 @@
 require('dotenv').config();
 const secret = process.env.JWT_TOKEN;
 
-const jwt = require('jasonwebtoken');
+const jwt = require('jsonwebtoken');
 
-const User = require('../models/user');
+const User = require('../models/user.js');
 
-const WithAuth = (req, res, next) => {
-  const token = rew.headers['x-access-token']; // any name x-access-token pass with the request
+const withAuth = (req, res, next) => {
+  // console.log(req)
+  const token = req.headers['x-access-token'];
   if(!token) // check if token is correct
     res.status(401).json({error: 'No Token provided!'});
   else {
@@ -14,8 +15,8 @@ const WithAuth = (req, res, next) => {
       if(err)
         res.status(401).json({error: 'Invalid Token: '});
       else {
-        req.email = decoded.email; // if token is correct, alter the request inserting email and user
-        User.findOne({email: decoded.email})
+        req.email = decode.email; // if token is correct, alter the request inserting email and user
+        User.findOne({email: decode.email})
         .then(user => {
           req.user = user;
           next();
@@ -26,6 +27,7 @@ const WithAuth = (req, res, next) => {
       }
     })
   }
+  
 }
 
-module.exports = WithAuth();
+module.exports = withAuth;

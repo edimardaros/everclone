@@ -6,6 +6,7 @@ require('./config/database')
 
 // var indexRouter = require('./routes/index');
 var usersRouter = require('./app/routes/users');
+var notesRouter = require('./app/routes/notes');
 
 var app = express();
 
@@ -17,5 +18,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/notes', notesRouter);
 
 module.exports = app;
