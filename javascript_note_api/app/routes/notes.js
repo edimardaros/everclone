@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const Note = require('../models/note.js');
 const withAuth = require('../middlewares/auth.js');
+const { route } = require('./users.js');
 
 router.post('/', withAuth, async function(req, res) {
   const {title, body} = req.body;
@@ -28,6 +29,15 @@ router.get('/:id', withAuth, async (req, res) => {
     res.status(500).json({error: 'Problem to get a note.'});
   }
 });
+
+router.get('/', withAuth, async(req, res) =>{
+  try {
+    let notes = await Note.find({author: req.user._id});
+    res.json(notes);
+  } catch (error) {
+    res.json({error: error}).status(500)
+  }
+})
 
 const isOwner = (user, note) => {
   if(JSON.stringify(user._id) == JSON.stringify(note.author._id))
