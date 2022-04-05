@@ -17,6 +17,18 @@ router.post('/', withAuth, async function(req, res) {
   }
 });
 
+router.get('/search', withAuth, async (req, res) =>{
+  const {query} = req.query;
+  try {
+    let notes = await Note
+      .find({author : req.user._id})
+      .find({ $text : { $search: query} }); // $text as operator and $search as operator
+    res.json(notes);
+  } catch (error) {
+    res.json({error: error}).status(500);
+  }
+})
+
 router.get('/:id', withAuth, async (req, res) => {
   try {
     const {id} = req.params;
@@ -74,6 +86,8 @@ router.delete('/:id', withAuth, async (req, res) => {
     res.status(500).json({error: 'Problem to delete the note;'});
   }
 });
+
+
 
 const isOwner = (user, note) => {
   if(JSON.stringify(user._id) == JSON.stringify(note.author._id))

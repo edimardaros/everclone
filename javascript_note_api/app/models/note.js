@@ -12,4 +12,6 @@ let noteSchema = new mongoose.Schema({
   }
 });
 
+noteSchema.index({'title': 'text', 'body': 'text'}); // used when searching 
+
 module.exports = mongoose.model('Note', noteSchema);
